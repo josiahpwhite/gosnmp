@@ -36,13 +36,34 @@ type Handler interface {
 	// Get sends an SNMP GET request
 	Get(oids []string) (result *SnmpPacket, err error)
 
+	// Set sends an SNMP SET request
+	Set(pdus []SnmpPDU) (result *SnmpPacket, err error)
+
+	// GetNext sends an SNMP GETNEXT request
+	GetNext(oids []string) (result *SnmpPacket, err error)
+
 	// GetBulk sends an SNMP GETBULK request
 	//
 	// For maxRepetitions greater than 255, use BulkWalk() or BulkWalkAll()
 	GetBulk(oids []string, nonRepeaters uint8, maxRepetitions uint8) (result *SnmpPacket, err error)
 
-	// GetNext sends an SNMP GETNEXT request
-	GetNext(oids []string) (result *SnmpPacket, err error)
+	SnmpEncodePacket(pdutype PDUType, pdus []SnmpPDU, nonRepeaters uint8, maxRepetitions uint8) ([]byte, error)
+
+	SnmpDecodePacket(resp []byte) (*SnmpPacket, error)
+
+	SetRequestID(reqID uint32)
+
+	SetMsgID(msgID uint32)
+
+	// BulkWalk retrieves a subtree of values using GETBULK. As the tree is
+	// walked walkFn is called for each new value. The function immediately returns
+	// an error if either there is an underlaying SNMP error (e.g. GetBulk fails),
+	// or if walkFn returns an error.
+	BulkWalk(rootOid string, walkFn WalkFunc) error
+
+	// BulkWalkAll is similar to BulkWalk but returns a filled array of all values
+	// rather than using a callback function to stream results.
+	BulkWalkAll(rootOid string) (results []SnmpPDU, err error)
 
 	// Walk retrieves a subtree of values using GETNEXT - a request is made for each
 	// value, unlike BulkWalk which does this operation in batches. As the tree is
@@ -54,16 +75,6 @@ type Handler interface {
 	// WalkAll is similar to Walk but returns a filled array of all values rather
 	// than using a callback function to stream results.
 	WalkAll(rootOid string) (results []SnmpPDU, err error)
-
-	// BulkWalk retrieves a subtree of values using GETBULK. As the tree is
-	// walked walkFn is called for each new value. The function immediately returns
-	// an error if either there is an underlaying SNMP error (e.g. GetBulk fails),
-	// or if walkFn returns an error.
-	BulkWalk(rootOid string, walkFn WalkFunc) error
-
-	// BulkWalkAll is similar to BulkWalk but returns a filled array of all values
-	// rather than using a callback function to stream results.
-	BulkWalkAll(rootOid string) (results []SnmpPDU, err error)
 
 	// SendTrap sends a SNMP Trap (v2c/v3 only)
 	//
@@ -79,9 +90,6 @@ type Handler interface {
 
 	// UnmarshalTrap unpacks the SNMP Trap.
 	UnmarshalTrap(trap []byte) (result *SnmpPacket)
-
-	// Set sends an SNMP SET request
-	Set(pdus []SnmpPDU) (result *SnmpPacket, err error)
 
 	// Check makes checking errors easy, so they actually get a minimal check
 	Check(err error)
