@@ -226,7 +226,7 @@ work against any SNMP MIB-2 compliant host (e.g. a router, NAS box, printer).
 
 Mocks were generated using:
 
-`mockgen -source=interface.go -package gosnmp > gosnmp_mock.go`
+`go generate interface.go`
 
 To profile cpu usage:
 
