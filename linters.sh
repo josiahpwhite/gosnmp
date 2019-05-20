@@ -20,5 +20,6 @@ if [ "$TRAVIS_GOARCH" = "amd64" ] ; then
   # golangci-lint run --out-format line-number --new-from-rev d388e71
 
   # do this until I can get final bug sorted out
-  golangci-lint run -D errcheck -D govet --out-format line-number
+  # golangci-lint run -D errcheck -D govet --out-format line-number
+  golangci-lint run --out-format line-number --disable-all  -E ineffassign
 fi
