@@ -17,6 +17,8 @@ if [ "$TRAVIS_GOARCH" = "amd64" ] ; then
   echo "=== GOLANGCI-LINT ==="
   # golangci-lint run --out-format line-number 2>&1 | fail_on_output
   # golangci-lint run --out-format line-number
-  # golangci-lint run --out-format line-number --new-from-rev d388e71           # do this until I can get final bug sorted out
-  which golangci-lint
+  # golangci-lint run --out-format line-number --new-from-rev d388e71
+
+  # do this until I can get final bug sorted out
+  golangci-lint run -D errcheck -D govet --out-format line-number
 fi
