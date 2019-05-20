@@ -26,7 +26,6 @@ install:
  - go get github.com/soniah/gosnmp
  - go get github.com/stretchr/testify/assert
  - go get -u golang.org/x/tools/cmd/goimports
- - go get -u github.com/soniah/golangci-lint
  - sudo ./snmp_users.sh
  - sudo /etc/init.d/snmpd restart
 
