@@ -21,5 +21,9 @@ if [ "$TRAVIS_GOARCH" = "amd64" ] ; then
 
   # do this until I can get final bug sorted out
   # golangci-lint run -D errcheck -D govet --out-format line-number
+  which golangci-lint
+  echo "run 1"
   golangci-lint run --out-format line-number --disable-all  -E ineffassign
+  echo "run 2"
+  golangci-lint run --out-format line-number
 fi
