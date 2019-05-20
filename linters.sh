@@ -12,3 +12,7 @@ if [ "$TRAVIS_GOARCH" = "amd64" ] ; then
   echo "=== GOIMPORTS ==="
   goimports -d . 2>&1 | fail_on_output
 fi
+
+if [ "$TRAVIS_GOARCH" = "amd64" ] ; then
+  golangci-lint run 2>&1 | fail_on_output
+fi
