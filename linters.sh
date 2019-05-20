@@ -14,5 +14,6 @@ if [ "$TRAVIS_GOARCH" = "amd64" ] ; then
 fi
 
 if [ "$TRAVIS_GOARCH" = "amd64" ] ; then
-  golangci-lint run 2>&1 | fail_on_output
+  echo "=== GOLANGCI-LINT ==="
+  golangci-lint run --out-format line-number 2>&1 | fail_on_output
 fi
